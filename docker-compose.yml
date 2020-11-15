@@ -1,0 +1,49 @@
+services:
+    zookeeper-main:
+        image: digitalwonderland/zookeeper
+        container_name: zookeeper-main
+        environment:
+            - ZOOKEEPER_CLIENT_PORT=2181
+        ports:
+            - 2181:2181
+            - 2888:2888
+            - 3888:3888
+
+    kafka-a:
+        image: wurstmeister/kafka
+        container_name: kafka-a
+        environment: 
+            - KAFKA_ADVERTISED_PORT=9092
+            - KAFKA_BROKER_ID=1
+            - KAFKA_ADVERTISED_HOST_NAME=kafka-a
+            - KAFKA_ZOOKEEPER_CONNECT=zookeeper-main:2181
+        ports:
+            - 9093:9092
+        depends_on:
+            - zookeeper-main
+
+    kafka-b:
+        image: wurstmeister/kafka
+        container_name: kafka-b
+        environment: 
+            - KAFKA_ADVERTISED_PORT=9092
+            - KAFKA_BROKER_ID=2
+            - KAFKA_ADVERTISED_HOST_NAME=kafka-b
+            - KAFKA_ZOOKEEPER_CONNECT=zookeeper-main:2181
+        ports:
+           - 9094:9092
+        depends_on:
+            - zookeeper-main
+
+    kafka-c:
+        image: wurstmeister/kafka
+        container_name: kafka-c
+        environment: 
+            - KAFKA_ADVERTISED_PORT=9092
+            - KAFKA_BROKER_ID=3
+            - KAFKA_ADVERTISED_HOST_NAME=kafka-c
+            - KAFKA_ZOOKEEPER_CONNECT=zookeeper-main:2181
+        ports:
+            - 9095:9092
+        depends_on:
+            - zookeeper-main
