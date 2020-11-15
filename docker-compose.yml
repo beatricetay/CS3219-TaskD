@@ -1,13 +1,25 @@
 services:
-    zookeeper-main:
+    zookeeper-a:
         image: digitalwonderland/zookeeper
-        container_name: zookeeper-main
+        container_name: zookeeper-a
         environment:
-            - ZOOKEEPER_CLIENT_PORT=2181
+            - server.1=zookeeper-a:2888:3888;2181
+            - server.2=zookeeper-b:2888:3888;2181
         ports:
             - 2181:2181
             - 2888:2888
             - 3888:3888
+    
+    zookeeper-b:
+        image: digitalwonderland/zookeeper
+        container_name: zookeeper-b
+        environment:
+            - server.1=zookeeper-a:2888:3888;2181
+            - server.2=zookeeper-b:2888:3888;2181
+        ports:
+            - 2182:2181
+            - 2889:2888
+            - 3889:3888
 
     kafka-a:
         image: wurstmeister/kafka
@@ -16,11 +28,12 @@ services:
             - KAFKA_ADVERTISED_PORT=9092
             - KAFKA_BROKER_ID=1
             - KAFKA_ADVERTISED_HOST_NAME=kafka-a
-            - KAFKA_ZOOKEEPER_CONNECT=zookeeper-main:2181
+            - KAFKA_ZOOKEEPER_CONNECT=zookeeper-a:2181, zookeeper-b:2181
         ports:
             - 9093:9092
         depends_on:
-            - zookeeper-main
+            - zookeeper-a
+            - zookeeper-b
 
     kafka-b:
         image: wurstmeister/kafka
@@ -29,11 +42,12 @@ services:
             - KAFKA_ADVERTISED_PORT=9092
             - KAFKA_BROKER_ID=2
             - KAFKA_ADVERTISED_HOST_NAME=kafka-b
-            - KAFKA_ZOOKEEPER_CONNECT=zookeeper-main:2181
+            - KAFKA_ZOOKEEPER_CONNECT=zookeeper-a:2181, zookeeper-b:2181
         ports:
            - 9094:9092
         depends_on:
-            - zookeeper-main
+            - zookeeper-a
+            - zookeeper-b
 
     kafka-c:
         image: wurstmeister/kafka
@@ -42,8 +56,9 @@ services:
             - KAFKA_ADVERTISED_PORT=9092
             - KAFKA_BROKER_ID=3
             - KAFKA_ADVERTISED_HOST_NAME=kafka-c
-            - KAFKA_ZOOKEEPER_CONNECT=zookeeper-main:2181
+            - KAFKA_ZOOKEEPER_CONNECT=zookeeper-a:2181, zookeeper-b:2181
         ports:
             - 9095:9092
         depends_on:
-            - zookeeper-main
+            - zookeeper-a
+            - zookeeper-b

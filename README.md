@@ -1,4 +1,4 @@
-<h1> CS3219 Task D: Three Node Apache Kafka Cluster</h1>
+<h1> CS3219 Task D: 3 node apache kafka cluster managed by zookeeper ensemble</h1>
 
 <h1>Instructions</h1>
 <h3>Setting up Kafka cluster</h3>
@@ -10,7 +10,7 @@
 Expected output:
 ![](./pictures/setup-1.png)
 
-<h3>Running the Kafka cluster: Pub-sub</h3>
+<h3>Running the Kafka cluster</h3>
 
 Note: You can replace the topic name in [topicName] with your own name
 
@@ -24,7 +24,7 @@ Note: You can replace the topic name in [topicName] with your own name
         --topic topicName \
         --partitions 1 \
         --replication-factor 3 \
-        --zookeeper zookeeper-main:2181
+        --zookeeper zookeeper-a:2181, zookeeper-b:2181
 
 The expected output is: `Created topic [topicName].`
 
@@ -33,26 +33,28 @@ Example:
 
 2. Check whether the creation of [topicName] was successful by running the following command:
 
-        docker run \
-        --rm \
-        --network=cs3219-taskd_default \
-        wurstmeister/kafka kafka-topics.sh \
-        --list \
-        --zookeeper zookeeper-main:2181
+		docker run \
+		--rm \
+		--network=cs3219-taskd_default \
+		wurstmeister/kafka kafka-topics.sh \
+		--list \
+		--zookeeper zookeeper-a:2181, zookeeper-b:2181
 
 The expected output is `[topicName]`
 
 Example:
 ![](./pictures/run-2.png)
 
+<h3>Pub-sub</h3>
+
 3. Create publisher for [topicName] by running the following command:
 
-        docker run \
-        --rm --interactive \
-        --network=cs3219-taskd_default \
-        wurstmeister/kafka kafka-console-producer.sh \
-        --topic topicName \
-        --bootstrap-server kafka-a:9092, kafka-b:9092, kafka-c:9092
+		docker run \
+		--rm --interactive \
+		--network=cs3219-taskd_default \
+		wurstmeister/kafka kafka-console-producer.sh \
+		--topic topicName \
+		--bootstrap-server kafka-a:9092, kafka-b:9092, kafka-c:9092
 
 Expected output:
 ![](./pictures/run-3.png)
@@ -111,7 +113,7 @@ For the kafka-id of `2` above, input `docker stop kafka-b`.
 ![](./pictures/test-2.png)
 
 
-8. Enter a few more lines in the terminal that is running the publisher in step 3. It is expected to see the new lines be printed out at the terminal that is running the consumer.
+9. Enter a few more lines in the terminal that is running the publisher in step 3. It is expected to see the new lines be printed out at the terminal that is running the consumer.
 
 Example for publisher:
 
