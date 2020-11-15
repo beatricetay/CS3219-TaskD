@@ -1,9 +1,9 @@
-<h1> CS3219 Task D: 3 node Apache Kafka cluster</h1>
+<h1> CS3219 Task D: Three Node Apache Kafka Cluster</h1>
 
 <h1>Instructions</h1>
 <h3>Setting up Kafka cluster</h3>
 
-1. git clone https://github.com/beatricetay/CS3219-TaskD.git
+1. run `git clone https://github.com/beatricetay/CS3219-TaskD.git`
 
 2. run `docker-compose up -d`
 
@@ -12,7 +12,7 @@ Expected output:
 
 <h3>Running the Kafka cluster: Pub-sub</h3>
 
-Note: You can replace the text in [ ] with your own names
+Note: You can replace the topic name in [topicName] with your own name
 
 1. Create a topic with [topicName] by runnning the following command:
 
@@ -47,12 +47,12 @@ Example:
 
 3. Create publisher for [topicName] by running the following command:
 
-docker run \
---rm --interactive \
---network=cs3219-taskd_default \
-wurstmeister/kafka kafka-console-producer.sh \
---topic topicName \
---bootstrap-server kafka-a:9092, kafka-b:9092, kafka-c:9092
+        docker run \
+        --rm --interactive \
+        --network=cs3219-taskd_default \
+        wurstmeister/kafka kafka-console-producer.sh \
+        --topic topicName \
+        --bootstrap-server kafka-a:9092, kafka-b:9092, kafka-c:9092
 
 Expected output:
 ![](./pictures/run-3.png)
@@ -79,7 +79,7 @@ Example:
 
 ![](./pictures/run-5.png)
 
-<h3>Running the Kafka cluster: Testing the mangement of master node failure in the Kafka cluster</h3>
+<h3>Testing the mangement of master node failure in the Kafka cluster</h3>
 
 6. After running steps 1 to 5 from above, find out who is the current master node for [topicName] by opening a new terminal and running the following command:
 
@@ -98,11 +98,15 @@ Example:
 7. Manually create a master node failure by stopping the docker container that is running the master node. The mapping of kafka-id to docker-container-id is,
 1:kafka-a, 2:kafka-b, 3:kafka-c
 
-e.g. In the screenshot above, the Leader is 2, which means the kafka-id is 2 and the docker-container-id is kafka-b.
+Example:
 
-8. Input `docker stop [docker-container-id]`.
+In the screenshot above, the Leader is 2, which makes the kafka-id 2 and the docker-container-id as kafka-b.
 
-e.g. For the kafka id of `2` above, input `docker stop kafka-b`.
+8. Run `docker stop [docker-container-id]`
+
+Example:
+
+For the kafka-id of `2` above, input `docker stop kafka-b`.
 
 ![](./pictures/test-2.png)
 
